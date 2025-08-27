@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TSNEKO — Plataformas streaming</title>
+  <meta name="description" content="Catálogo de plataformas de streaming. Compra rápida por WhatsApp." />
+
+  <!-- Fuente + Tailwind -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'ui-sans-serif', 'system-ui'] },
+          colors: {
+            brand: {
+              50:'#f5f3ff', 100:'#ede9fe', 200:'#ddd6fe', 300:'#c4b5fd',
+              400:'#a78bfa', 500:'#8b5cf6', 600:'#7c3aed', 700:'#6d28d9',
+              800:'#5b21b6', 900:'#4c1d95'
+            }
+          },
+          boxShadow: {
+            glow: '0 0 30px rgba(139, 92, 246, 0.35)',
+            glow2: '0 0 60px rgba(56, 189, 248, 0.20)'
+          },
+          keyframes: {
+            floaty: { '0%,100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-3px)'} },
+            fadeIn: { '0%':{opacity:0, transform:'scale(.98)'}, '100%':{opacity:1, transform:'scale(1)'} }
+          },
+          animation: {
+            floaty: 'floaty 6s ease-in-out infinite',
+            fadeIn: 'fadeIn .2s ease-out'
+          }
+        }
+      },
+      darkMode: 'class'
+    }
+  </script>
+  <style>
+    :root { color-scheme: dark; }
+    body { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji'; }
+  </style>
+</head>
+<body class="bg-black text-zinc-100 antialiased">
+  <!-- Fondo futurista -->
+  <div aria-hidden="true" class="fixed inset-0 -z-10 overflow-hidden">
+    <div class="absolute -top-24 -left-24 h-[36rem] w-[36rem] rounded-full blur-3xl opacity-30 bg-brand-600 mix-blend-screen animate-floaty"></div>
+    <div class="absolute bottom-[-10rem] right-[-8rem] h-[40rem] w-[40rem] rounded-full blur-3xl opacity-25 bg-cyan-500 mix-blend-screen animate-floaty" style="animation-delay:1s"></div>
+    <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(40rem_40rem_at_120%_10%,rgba(56,189,248,0.15),transparent_60%)]"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="sticky top-0 z-40 backdrop-blur supports-[backdrop-filter]:bg-black/50 border-b border-white/10">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="flex h-16 items-center justify-between">
+        <a href="#" class="flex items-center gap-3 group">
+          <!-- Logo con imagen -->
+          <div class="h-12 w-12 rounded-xl bg-gradient-to-br from-brand-500 to-cyan-400 ring-1 ring-white/10 grid place-items-center shadow-glow2">
+            <img src="https://i.ibb.co/rKfJh89Y/tu-imagen.png" alt="TS Logo" class="h-10 w-10 object-contain">
+          </div>
+          <div>
+            <p class="text-xl font-extrabold tracking-tight leading-none">TSNEKO</p>
+            <p class="text-[11px] uppercase tracking-[.22em] text-zinc-400">Plataformas streaming</p>
+          </div>
+        </a>
+
+        <nav class="flex items-center gap-4">
+          <button id="termsOpenBtn" class="text-sm text-zinc-300 hover:text-white transition hidden">Términos</button>
+          <button id="cartBtn" class="relative inline-flex items-center gap-2 rounded-xl bg-white/10 hover:bg-white/20 px-3 py-2 text-sm font-medium ring-1 ring-white/10 shadow-glow transition">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-5 w-5"><path d="M2.25 3a.75.75 0 0 0 0 1.5h1.364l2.61 10.44a2.25 2.25 0 0 0 2.19 1.76h8.4a2.25 2.25 0 0 0 2.19-1.76l1.41-6.75H7.63l-.36-1.44h12.98a.75.75 0 0 0 0-1.5H6.88L6.4 3.87A1.5 1.5 0 0 0 4.94 3H2.25zM9 20.25a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm8.25-1.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z"/></svg>
+            <span>Carrito</span>
+            <span id="cartCount" class="absolute -top-2 -right-2 grid h-5 w-5 place-items-center rounded-full bg-brand-600 text-xs font-bold">0</span>
+          </button>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero / título -->
+  <section class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+    <div class="max-w-2xl">
+      <h1 class="text-4xl sm:text-5xl font-black tracking-tight">TSNEKO</h1>
+      <p class="mt-2 text-lg text-zinc-300">Plataformas streaming</p>
+      <p class="mt-4 text-sm text-zinc-400 max-w-prose">Descubre tus planes favoritos, agrégalos al carrito y termina tu compra fácil por WhatsApp.</p>
+    </div>
+
+    <!-- Buscador -->
+    <div class="mt-6 max-w-xl">
+      <label class="sr-only" for="search">Buscar</label>
+      <div class="relative">
+        <input id="search" type="text" placeholder="Buscar plataforma o plan…" class="w-full rounded-2xl bg-white/5 ring-1 ring-white/10 focus:ring-2 focus:ring-brand-500 px-4 py-3 text-sm outline-none placeholder:text-zinc-500" />
+        <div class="pointer-events-none absolute inset-y-0 right-3 grid place-items-center text-zinc-500">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-5 w-5"><path fill-rule="evenodd" d="M10.5 3.75a6.75 6.75 0 1 0 4.243 11.943l3.782 3.782a.75.75 0 1 0 1.06-1.06l-3.781-3.783A6.75 6.75 0 0 0 10.5 3.75zm-5.25 6.75a5.25 5.25 0 1 1 10.5 0 5.25 5.25 0 0 1-10.5 0z" clip-rule="evenodd"/></svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Grid productos -->
+  <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-24">
+    <div id="productsGrid" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"></div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-white/10">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="h-8 w-8 rounded-lg bg-gradient-to-br from-brand-500 to-cyan-400 ring-1 ring-white/10 grid place-items-center"><span class="text-xs font-black">TS</span></div>
+        <p class="text-xs text-zinc-400">© <span id="year"></span> TSNEKO. Todos los derechos reservados.</p>
+      </div>
+      <a href="#" id="footerTerms" class="text-xs text-zinc-400 hover:text-zinc-200 hidden">Términos</a>
+    </div>
+  </footer>
+
+  <!-- Carrito (off-canvas) -->
+  <aside id="cartPanel" class="fixed inset-y-0 right-0 z-50 w-full max-w-md translate-x-full transition-transform duration-300 ease-out bg-black/95 backdrop-blur border-l border-white/10">
+    <div class="flex h-full flex-col">
+      <div class="flex items-center justify-between p-4 border-b border-white/10">
+        <h2 class="text-lg font-semibold">Tu carrito</h2>
+        <button id="cartClose" class="p-2 rounded-lg hover:bg-white/10" aria-label="Cerrar carrito">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div id="cartItems" class="flex-1 overflow-y-auto p-4 space-y-3"></div>
+      <div class="border-t border-white/10 p-4 space-y-3">
+        <div class="flex items-center justify-between text-sm text-zinc-300">
+          <span>Total</span>
+          <span id="cartTotal" class="font-bold text-white">S/ 0.00</span>
+        </div>
+        <div class="grid gap-2">
+          <input id="customerName" type="text" placeholder="Tu nombre (opcional)" class="w-full rounded-xl bg-white/5 ring-1 ring-white/10 focus:ring-2 focus:ring-brand-500 px-3 py-2 text-sm outline-none placeholder:text-zinc-500" />
+          <button id="checkoutBtn" class="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-brand-500 to-cyan-500 hover:from-brand-400 hover:to-cyan-400 px-4 py-3 text-sm font-semibold text-white ring-1 ring-white/10 shadow-glow transition">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-5 w-5"><path d="M2.25 12a9.75 9.75 0 1 1 19.5 0 9.75 9.75 0 0 1-19.5 0zm14.03-2.53a.75.75 0 0 0-1.06 0l-3.97 3.97-1.67-1.67a.75.75 0 0 0-1.06 1.06l2.2 2.2a.75.75 0 0 0 1.06 0l4.53-4.53a.75.75 0 0 0 0-1.06z"/></svg>
+            Finalizar por WhatsApp
+          </button>
+          <p class="text-[11px] text-zinc-500">Al continuar, aceptas los términos del plan seleccionado.</p>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Overlay del carrito -->
+  <div id="cartOverlay" class="fixed inset-0 z-40 bg-black/50 opacity-0 pointer-events-none transition-opacity"></div>
+
+  <script>
+    // ====== CONFIGURACIÓN ======
+    const WHATSAPP_NUMBER = '51908524689'; // Perú: 51 + número local sin +
+    const CURRENCY_PREFIX = 'S/';
+
+    const products = [
+      { id: 'netflix-1', name: 'Netflix', img: 'https://limagris.com/wp-content/uploads/2022/03/1639817723_888453_1639817851_noticia_normal_recorte1.jpg', badge: '1 perfil', quality: 'Full HD', term: 'Mensual', price: 15.00, description: 'Plan personal en Full HD. Ideal para disfrutar de tus series y películas favoritas sin interrupciones.' },
+      { id: 'netflix-4k', name: 'Netflix Cta. Comp.', img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpizF3bKKmMpj8moKW34690UJ2_kRZIY0zadLBxuLPrMzL5Fo_74_S5iPnW8wA6eVlePk&usqp=CAU', badge: '5 perfiles', quality: '4K', term: 'Mensual', price: 40.00, description: 'Plan familiar en Full HD hasta en 4 dispositivos a la vez. Diseñado para toda la familia.' },
+      { id: 'disney-1', name: 'Disney+', img: 'https://elcomercio-elcomercio-prod.web.arc-cdn.net/resizer/v2/RS5ITFAY6NBLJDVMT7VQ73MQSQ.png?auth=5edc1e9e7b9049746addc4f106b18e6cae3420cfc773652330e27c7a838f0e05&width=1200&height=800&smart=true&quality=75', badge: '1 perfil', quality: 'Full HD', term: 'Mensual', price: 6.00, description: 'La magia de Disney+, Pixar, Marvel, National Geographic y Star Wars reunida en Full HD.' },
+      { id: 'max-1', name: 'Max', img: 'https://elcomercio.pe/resizer/v2/G66KUBQSUNCBLMT4XBY3CGT5VI.jpg?auth=f4d51a862c56523570eb6855ea12838928dd05ed97acce8201457524c152fb5d&width=980&height=528&quality=75&smart=true', badge: '1 perfil', quality: 'Full HD', term: 'Mensual', price: 8.00, description: 'Series icónicas, películas taquilleras y documentales exclusivos de HBO, Warner Bros., DC y Discovery.' },
+      { id: 'prime-1', name: 'Prime Video', img: 'https://m.media-amazon.com/images/G/01/primevideo/seo/primevideo-seo-logo.png', badge: '1 perfil', quality: 'Full HD', term: 'Mensual', price: 8.00, description: 'El mejor entretenimiento con Amazon Originals, películas y series para toda la familia en Full HD.' },
+      { id: 'crunchy-1', name: 'Crunchyroll', img: 'https://xboxwire.thesourcemediaassets.com/sites/2/2023/07/CR_Product_XboxPerksPromotion_CRM-002-93beb45a56517b11dd3e.jpg', badge: '1 perfil', quality: 'Full HD', term: 'Mensual', price: 5.00, description: 'Vive el mundo del anime con estrenos exclusivos, clásicos imperdibles y miles de episodios.' },
+      { id: 'vix-1', name: 'Vix+', img: 'https://dplnews.com/wp-content/uploads/2024/01/dplnews_vix-premium_mc21124.png', badge: '1 perfil', quality: 'Full HD', term: 'Mensual', price: 5.00, description: 'Disfruta de novelas, series, películas, canales en vivo y deportes, todo en español.' },
+      { id: 'youtube-1', name: 'YouTube Premium', img: 'https://indiehoy.com/wp-content/uploads/2020/01/youtubepremium-youtubemusic.png', badge: '1 cuenta', quality: 'Full HD', term: 'Mensual', price: 6.00, description: 'Disfruta YouTube sin anuncios, reproducción en segundo plano y acceso a YouTube Music Premium.' },
+      { id: 'canva-1', name: 'Canva Pro', img: 'https://i0.wp.com/creatypestudio.co/wp-content/uploads/2023/06/How-to-Get-Canva-Pro-for-Free-Lifetime-An-Easy-Guide.png?fit=600%2C5400&ssl=1', badge: '1 cuenta', quality: 'N/A', term: 'Mensual', price: 6.00, description: 'Dale vida a tus ideas con Canva Pro: plantillas premium, contenido ilimitado y funciones avanzadas para diseñar.' }
+    ];
+
+    // ====== UTILIDADES ======
+    const formatMoney = (num) => `${CURRENCY_PREFIX} ${num.toFixed(2)}`;
+
+    // ====== RENDER PRODUCTOS ======
+    const grid = document.getElementById('productsGrid');
+
+    function renderProducts(list) {
+      grid.innerHTML = '';
+      list.forEach(p => {
+        // términos por defecto
+        let termsHTML = `
+          <p>• El acceso es válido por <strong>30 días</strong> desde la activación.</p>
+          <p>• El plan es para <strong>1 perfil personal</strong>, no transferible.</p>
+          <p>• Solo puede usarse en <strong>1 dispositivo</strong>.</p>
+          <p>• <strong>No</strong> está permitido compartir la cuenta con terceros.</p>
+          <p>• <strong>No</strong> se pueden realizar cambios en la cuenta: correo, número de teléfono, contraseña ni configuración de seguridad.</p>
+          <p>• No se realizan devoluciones una vez activado el servicio.</p>
+          <p>• 🚨 El incumplimiento de estas condiciones <strong>anula la garantía</strong> y conlleva la <strong>suspensión inmediata del acceso</strong>.</p>
+        `;
+
+        // Términos específicos
+        if (p.id === 'youtube-1') {
+          termsHTML = `
+            <p>• Acceso válido por <strong>30 días</strong> desde la activación.</p>
+            <p>• El usuario no debe haber estado previamente en un plan familiar de YouTube Premium.</p>
+            <p>• Cada correo electrónico puede renovar la promoción máximo 2 veces, alcanzando un total de 60 días.</p>
+            <p>• Para activar el acceso, el usuario debe proporcionar un correo electrónico válido.</p>
+            <p>• No se realizan devoluciones después de la activación.</p>
+            <p>• 🚨 Cualquier modificación indebida o uso fuera de estas reglas <strong>anula la garantía</strong> y conlleva la suspensión del acceso.</p>
+          `;
+        }
+
+        if (p.id === 'netflix-4k') {
+          termsHTML = `
+            <p>• El acceso es válido por <strong>30 días</strong> desde la activación.</p>
+            <p>• El plan es para <strong>5 perfiles </strong>.</p>
+            <p>• Solo puede usarse en <strong>4 dispositivos a la vez</strong>.</p>
+            <p>• <strong>No</strong> se pueden realizar cambios en la cuenta: correo, número de teléfono, contraseña ni configuración de seguridad.</p>
+            <p>• No se realizan devoluciones una vez activado el servicio.</p>
+            <p>• 🚨 El incumplimiento de estas condiciones <strong>anula la garantía</strong> y conlleva la <strong>suspensión inmediata del acceso</strong>.</p>
+          `;
+        }
+
+        if (p.id === 'canva-1') {
+          termsHTML = `
+            <p>• Acceso válido por <strong>30 días</strong>.</p>
+            <p>• Incluye las funciones premium de Canva Pro disponibles en la cuenta.</p>
+            <p>• Para activar el acceso, el usuario debe proporcionar un correo electrónico válido.</p>
+
+            <p>• No se realizan reembolsos tras la activación.</p>
+            <p>• 🚨 El mal uso o modificaciones indebidas <strong>anulan la garantía</strong> y pueden provocar la suspensión.</p>
+          `;
+        }
+
+        if (p.id === 'prime-1') {
+          termsHTML = `
+            <p>• Acceso válido por <strong>30 días</strong>.</p>
+            <p>• Algunas películas o estrenos que aparecen como <em>compra</em> o <em>alquiler</em> <strong>no están incluidos</strong> en este servicio.</p>
+            <p>• Está totalmente <strong>prohibido</strong> realizar compras o alquileres adicionales.</p>
+            <p>• Acceso únicamente al catálogo incluido de <strong>Prime Video</strong>.</p>
+            <p>• Solo se permite 1 dispositivo en reproducción al mismo tiempo.</p>
+            <p>• <strong>No</strong> se pueden modificar datos de cuenta (correo, contraseña, teléfono).</p>
+            <p>• <strong>No</strong> usar la cuenta para compras ni modificar métodos de pago.</p>
+            <p>• El acceso es únicamente para ingresar a <strong>Prime Video</strong>, no a Amazon.</p>
+            <p>• No hay reembolsos una vez activado el servicio.</p>
+            <p>• 🚨 El incumplimiento de estas reglas genera <strong>suspensión inmediata</strong> del acceso.</p>
+          `;
+        }
+
+        const card = document.createElement('article');
+        card.className = 'group rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 transition overflow-hidden ring-1 ring-transparent hover:ring-brand-500/40 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]';
+        card.innerHTML = `
+          <div class="flex flex-col h-full">
+            <div class="relative aspect-[16/9] overflow-hidden">
+              <img src="${p.img}" alt="${p.name}" class="h-full w-full object-cover transition duration-300 group-hover:scale-105">
+              <span class="absolute left-3 top-3 text-[11px] rounded-full px-2 py-1 ring-1 ring-white/10 bg-white/10 text-zinc-200 backdrop-blur">${p.badge}</span>
+            </div>
+            <div class="p-5 flex-1 flex flex-col">
+              <div class="flex items-start justify-between gap-3">
+                <div>
+                  <h3 class="text-lg font-semibold">${p.name}</h3>
+                  <p class="mt-1 text-xs text-zinc-400">${p.term} • ${p.quality}</p>
+                </div>
+                <p class="text-base font-bold">${formatMoney(p.price)}</p>
+              </div>
+              <p class="mt-3 text-sm text-zinc-300">${p.description}</p>
+              <div class="mt-3">
+                <button class="termsToggle text-xs text-zinc-300 hover:text-white underline underline-offset-4" aria-expanded="false">Términos</button>
+                <div class="termsBox mt-2 hidden text-[13px] text-zinc-300 border border-white/10 rounded-xl bg-white/5 p-3">
+                  ${termsHTML}
+                </div>
+              </div>
+              <div class="flex items-center justify-between gap-2">
+               <div class="text-xs text-zinc-500">Incluye soporte durante el periodo.</div>
+               <button data-id="${p.id}" class="addToCart inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-brand-500 to-cyan-500 hover:from-brand-400 hover:to-cyan-400 px-3 py-2 text-sm font-semibold text-white ring-1 ring-white/10 shadow-glow transition">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-5 w-5">
+                 <path d="M2.25 3a.75.75 0 0 0 0 1.5h1.364l2.61 10.44a2.25 2.25 0 0 0 2.19 1.76h8.4a2.25 2.25 0 0 0 2.19-1.76l1.41-6.75H7.63l-.36-1.44h12.98a.75.75 0 0 0 0-1.5H6.88L6.4 3.87A1.5 1.5 0 0 0 4.94 3H2.25zM9 20.25a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm8.25-1.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z"/>
+                </svg>
+                Agregar
+              </button>
+              </div>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+
+      // listeners
+      document.querySelectorAll('.addToCart').forEach(btn => btn.addEventListener('click', () => addToCart(btn.dataset.id)));
+      grid.querySelectorAll('.termsToggle').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const box = btn.closest('article').querySelector('.termsBox');
+          const isHidden = box.classList.contains('hidden');
+          // ocultar otras cajas (opcional): comentado, si quieres permitir solo una abierta descomenta
+          // document.querySelectorAll('.termsBox').forEach(b=>b.classList.add('hidden'));
+          box.classList.toggle('hidden');
+          btn.setAttribute('aria-expanded', String(isHidden));
+        });
+      });
+    }
+
+    // ====== BÚSQUEDA ======
+    const search = document.getElementById('search');
+    search.addEventListener('input', e => {
+      const q = e.target.value.toLowerCase();
+      const filtered = products.filter(p => `${p.name} ${p.description} ${p.term} ${p.quality} ${p.badge}`.toLowerCase().includes(q));
+      renderProducts(filtered);
+    });
+
+    // ====== CARRITO ======
+    const cartBtn = document.getElementById('cartBtn');
+    const cartPanel = document.getElementById('cartPanel');
+    const cartClose = document.getElementById('cartClose');
+    const cartOverlay = document.getElementById('cartOverlay');
+    const cartItems = document.getElementById('cartItems');
+    const cartTotal = document.getElementById('cartTotal');
+    const cartCount = document.getElementById('cartCount');
+    const customerName = document.getElementById('customerName');
+
+    let cart = JSON.parse(localStorage.getItem('tsneko_cart') || '[]');
+
+    function saveCart() {
+      localStorage.setItem('tsneko_cart', JSON.stringify(cart));
+    }
+
+    function openCart() {
+      cartPanel.classList.remove('translate-x-full');
+      cartOverlay.classList.remove('pointer-events-none');
+      requestAnimationFrame(() => cartOverlay.classList.add('opacity-100'));
+    }
+
+    function closeCart() {
+      cartPanel.classList.add('translate-x-full');
+      cartOverlay.classList.add('pointer-events-none');
+      cartOverlay.classList.remove('opacity-100');
+    }
+
+    function addToCart(id) {
+      const item = products.find(p => p.id === id);
+      if (!item) return;
+      const existing = cart.find(i => i.id === id);
+      if (existing) existing.qty += 1; else cart.push({ ...item, qty: 1 });
+      updateCartUI();
+      saveCart();
+      openCart();
+    }
+
+    function removeFromCart(id) {
+      cart = cart.filter(i => i.id !== id);
+      updateCartUI();
+      saveCart();
+    }
+
+    function changeQty(id, delta) {
+      const it = cart.find(i => i.id === id);
+      if (!it) return;
+      it.qty += delta;
+      if (it.qty <= 0) return removeFromCart(id);
+      updateCartUI();
+      saveCart();
+    }
+
+    function updateCartUI() {
+      cartItems.innerHTML = '';
+      let total = 0;
+      cart.forEach(i => {
+        total += i.price * i.qty;
+        const row = document.createElement('div');
+        row.className = 'flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-3';
+        row.innerHTML = `
+          <div class='flex-1'>
+            <p class='text-sm font-medium'>${i.name} <span class="text-xs text-zinc-400">${i.term} • ${i.quality}</span></p>
+            <p class='text-xs text-zinc-400 mt-0.5'>${formatMoney(i.price)} c/u</p>
+          </div>
+          <div class='flex items-center gap-2'>
+            <button class='qtyDown rounded-lg bg-white/10 hover:bg-white/20 px-2 py-1 text-sm' data-id='${i.id}'>−</button>
+            <span class='w-6 text-center text-sm'>${i.qty}</span>
+            <button class='qtyUp rounded-lg bg-white/10 hover:bg-white/20 px-2 py-1 text-sm' data-id='${i.id}'>+</button>
+          </div>
+          <div class='w-20 text-right text-sm font-semibold'>${formatMoney(i.price * i.qty)}</div>
+          <button class='delItem p-2 rounded-lg hover:bg-white/10' aria-label='Eliminar' data-id='${i.id}'>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5"><path d="M6 7.5A.75.75 0 0 1 6.75 6.75h10.5a.75.75 0 0 1 0 1.5H18v10.125A2.625 2.625 0 0 1 15.375 21h-6.75A2.625 2.625 0 0 1 6 19.125V7.5h0zm3 .75a.75.75 0 0 0-.75.75v8.25a.75.75 0 1 0 1.5 0V9a.75.75 0 0 0-.75-.75zM12 9a.75.75 0 0 0-.75.75v8.25a.75.75 0 1 0 1.5 0V9.75A.75.75 0 0 0 12 9zm2.25 0a.75.75 0 0 0-.75.75v8.25a.75.75 0 1 0 1.5 0V9.75a.75.75 0 0 0-.75-.75z"/></svg>
+          </button>
+        `;
+        cartItems.appendChild(row);
+      });
+      cartTotal.textContent = formatMoney(total);
+      cartCount.textContent = cart.reduce((a,b)=>a+b.qty,0);
+
+      cartItems.querySelectorAll('.qtyDown').forEach(b=>b.addEventListener('click',()=>changeQty(b.dataset.id,-1)));
+      cartItems.querySelectorAll('.qtyUp').forEach(b=>b.addEventListener('click',()=>changeQty(b.dataset.id,1)));
+      cartItems.querySelectorAll('.delItem').forEach(b=>b.addEventListener('click',()=>removeFromCart(b.dataset.id)));
+    }
+
+    cartBtn.addEventListener('click', openCart);
+    cartClose.addEventListener('click', closeCart);
+    cartOverlay.addEventListener('click', closeCart);
+
+    // ====== CHECKOUT WHATSAPP ======
+    const checkoutBtn = document.getElementById('checkoutBtn');
+    checkoutBtn.addEventListener('click', () => {
+      if (!cart.length) { alert('Tu carrito está vacío.'); return; }
+      const name = customerName.value.trim();
+      const lines = cart.map(i => `• ${i.name} (${i.term} · ${i.quality}) x${i.qty} — ${formatMoney(i.price * i.qty)}`);
+      const total = cart.reduce((sum,i)=>sum+i.price*i.qty,0);
+      const msg = `Hola, quiero realizar este pedido:\n\n${lines.join('\n')}\n\nTotal: ${formatMoney(total)}${name?`\n\nNombre: ${name}`:''}`;
+      const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
+      window.open(url, '_blank');
+    });
+
+    // ====== INIT ======
+    document.getElementById('year').textContent = new Date().getFullYear();
+    renderProducts(products);
+    updateCartUI();
+  </script>
+</body>
+</html>
